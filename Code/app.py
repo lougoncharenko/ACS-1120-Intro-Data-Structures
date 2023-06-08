@@ -4,7 +4,7 @@ from histogram_class import Histogram
 
 
 app = Flask(__name__)
-histogram = Histogram("story.txt")
+histogram = Histogram("./data/story.txt")
 
 @app.route("/")
 def home():
