@@ -41,5 +41,5 @@ class Histogram:
       sentence += word + " "
     return sentence
   
-histogram = Histogram('Code/story.txt')
-histogram._generate_random_sentence()
+# histogram = Histogram("Code/story.txt")
+# histogram._generate_random_sentence()
