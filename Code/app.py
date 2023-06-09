@@ -1,10 +1,10 @@
 """Main script, uses other modules to generate sentences."""
 from flask import Flask, render_template
-from histogram_class import Histogram
-
+from classes.histogram_class import Histogram
 
 app = Flask(__name__)
-histogram = Histogram("./data/story.txt")
+# histogram = Histogram("./data/story.txt") -render version
+histogram = Histogram("Code/data/story.txt")
 
 @app.route("/")
 def home():
