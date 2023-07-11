@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     """Route that returns a web page containing the generated text."""
-    corpus_file = 'data/corpus.txt' 
+    corpus_file = './data/corpus.txt' 
     generator = Markov_Chain(corpus_file)
     sentence = generator.generate_sentence() 
     return render_template("index.html", sentence=sentence)
