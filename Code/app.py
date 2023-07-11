@@ -1,15 +1,16 @@
 """Main script, uses other modules to generate sentences."""
 from flask import Flask, render_template
-from classes.histogram_class import Histogram
+from higher_order_markov_chain import Markov_Chain
 
 app = Flask(__name__)
 # histogram = Histogram("./data/story.txt") -render version
-histogram = Histogram("Code/data/story.txt")
 
 @app.route("/")
 def home():
     """Route that returns a web page containing the generated text."""
-    sentence = histogram._generate_random_sentence()
+    corpus_file = 'Code/data/corpus.txt' 
+    generator = Markov_Chain(corpus_file)
+    sentence = generator.generate_sentence() 
     return render_template("index.html", sentence=sentence)
 
 

@@ -1,55 +1,60 @@
 import random
+import re
+from listogram import Listogram
 
-class Higher_Order_Markov_Chain:
-    def __init__(self, corpus_file):
-        self.corpus = self._read_corpus(corpus_file)
-        self.chain = self._build_chain(self.corpus)
-        self.historgram = self._generate_histogram(corpus_file)
-        
-    def _read_corpus(self, corpus_file):
-        with open(corpus_file, 'r') as file:
-            corpus = file.read()
-        return corpus.split()
+class Markov_Chain(dict):
+    def __init__(self, word_list=None):
+        super().__init__()
+        if word_list is not None:
+            parsed_word_list = self.corpus_parser(word_list)
+            for i, word in enumerate(parsed_word_list):
+                if i <= (len(parsed_word_list) - 2):
+                    self.build_chains(word, parsed_word_list[i + 1])
+                else:
+                    if word not in self:
+                        self[word] = []
+        for word, tokens in self.items():
+            self[word] = Listogram(tokens)
 
-    def _generate_histogram(self, corpus_file):
-        words = self.corpus
-        histogram = {}
-        for word in words:
-            histogram[word] = histogram.get(word, 0) + 1
+    def corpus_parser(self, source_text):
+        self.word_list = []
+        with open(source_text, 'r') as infile:
+            words = infile.read().split()
+            for word in words:
+                word = re.sub("-", " ", word)
+                word = re.sub("[^a-zA-Z!,.?']", "", word)
+                self.word_list.append(word)
 
-        return histogram
+        return self.word_list
 
-    def _build_chain(self, corpus):
-        chain = {}
-        for i in range(len(corpus)-1):
-            current_word = corpus[i]
-            next_word = corpus[i+1]
-            if current_word in chain:
-                chain[current_word].append(next_word)
-            else:
-                chain[current_word] = [next_word]
+    def build_chains(self, word, next_word):
+        if word in self:
+            self[word].append(next_word)
+        else:
+            self[word] = [next_word]
 
-        return chain
-    
     def generate_sentence(self):
-        current_word = random.choice(list(self.chain.keys()))
+        current_word = random.choice(list(self.keys()))
         random_words = []
-        
+        random_words.append(current_word)
+
         for _ in range(random.randint(5, 30)):
-            random_words.append(current_word)
-            next_word_options = self.chain.get(current_word, [])
-            if next_word_options:
-                current_word = random.choice(next_word_options)
+            next_word = self[current_word].sample()
+            if next_word != "I":
+                random_words.append(next_word.lower())
             else:
-                break
-        
+                random_words.append(next_word)
+            current_word = next_word
+    
         sentence = " ".join(random_words)
-        sentence = sentence.capitalize() + '.'
+        new_string = sentence.replace(",", "")
+        new_sentence = new_string.replace(".", "")
+        sentence = new_sentence.capitalize() + '.'
         return sentence
 
-
-corpus_file = 'Code/data/corpus.txt'  # Path to your corpus file
-generator = Higher_Order_Markov_Chain(corpus_file)
+corpus_file = 'Code/data/corpus.txt' 
+generator = Markov_Chain(corpus_file)
 sentence = generator.generate_sentence()
 print(sentence)
 
+    
