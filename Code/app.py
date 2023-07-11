@@ -3,7 +3,6 @@ from flask import Flask, render_template
 from higher_order_markov_chain import Markov_Chain
 
 app = Flask(__name__)
-# histogram = Histogram("./data/story.txt") -render version
 
 @app.route("/")
 def home():

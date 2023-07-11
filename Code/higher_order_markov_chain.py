@@ -52,9 +52,6 @@ class Markov_Chain(dict):
         sentence = new_sentence.capitalize() + '.'
         return sentence
 
-corpus_file = 'Code/data/corpus.txt' 
-generator = Markov_Chain(corpus_file)
-sentence = generator.generate_sentence()
-print(sentence)
+
 
     
